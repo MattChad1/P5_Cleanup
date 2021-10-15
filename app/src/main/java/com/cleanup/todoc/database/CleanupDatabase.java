@@ -17,7 +17,7 @@ import com.cleanup.todoc.database.Dao.TaskDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
-@Database(entities = {Project.class, Task.class}, version = 2, exportSchema = false)
+@Database(entities = {Project.class, Task.class}, version = 3, exportSchema = false)
 public abstract class CleanupDatabase extends RoomDatabase {
     
     private static String TAG = "Database class";
@@ -54,9 +54,6 @@ public abstract class CleanupDatabase extends RoomDatabase {
             @Override
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
-
-                Log.i(TAG, "onCreate: ");
-
                 Project[] startProjects = new Project[]{
                         new Project(0, "Projet Tartampion", 0xFFEADAD1),
                         new Project(0, "Projet Lucidia", 0xFFB4CDBA),

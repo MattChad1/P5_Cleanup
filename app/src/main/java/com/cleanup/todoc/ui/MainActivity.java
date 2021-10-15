@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         super.onCreate(savedInstanceState);
 
         db = CleanupDatabase.getInstance(this);
+        //db.projectDao().insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
         allProjects = db.projectDao().getAllProjects().getValue();
 
         //Log.i(TAG, "onCreate: allProjects : " + allProjects.toString());
