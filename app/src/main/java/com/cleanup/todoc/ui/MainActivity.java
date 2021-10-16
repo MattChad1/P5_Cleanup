@@ -17,10 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.ViewModelFactory;
 import com.cleanup.todoc.database.CleanupDatabase;
 import com.cleanup.todoc.database.Dao.ProjectDao;
 import com.cleanup.todoc.model.Project;
@@ -41,10 +43,9 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     private String TAG = "MainActivity";
 
-    CleanupDatabase db;
-    List<Project> allProjects;
+    private MainViewModel vm;
 
-
+private List<Project> allProjects = new ArrayList<>();
 
 
     /** List of all current tasks of the application */
@@ -84,11 +85,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = CleanupDatabase.getInstance(this);
+        vm = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MainViewModel.class);
+
+        //db = CleanupDatabase.getInstance(getApplicationContext());
         //db.projectDao().insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
-        allProjects = db.projectDao().getAllProjects().getValue();
+        //allProjects = db.projectDao().getAllProjects().getValue();
 
         //Log.i(TAG, "onCreate: allProjects : " + allProjects.toString());
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -267,6 +272,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     private void populateDialogSpinner() {
         final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        vm.getAllProjects().observe(this, projects -> {
+            allProjects = projects;
+            adapter.notifyDataSetChanged();
+        });
+
+
         if (dialogSpinner != null) {
             dialogSpinner.setAdapter(adapter);
         }
