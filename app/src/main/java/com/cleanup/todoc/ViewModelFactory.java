@@ -36,7 +36,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MainViewModel.class)) {
-            return (T) new MainViewModel(MyApplication.getInstance(), repository);
+            return (T) new MainViewModel(repository);
         }
         else throw new IllegalArgumentException("Unknown ViewModel class");
     }

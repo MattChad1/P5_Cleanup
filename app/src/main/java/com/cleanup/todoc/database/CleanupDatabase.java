@@ -28,8 +28,7 @@ public abstract class CleanupDatabase extends RoomDatabase {
     // --- SINGLETON ---
     private static volatile CleanupDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    public static final ExecutorService databaseWriteExecutor =
-            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     // --- DAO ---
     public abstract ProjectDao projectDao();
@@ -54,27 +53,16 @@ public abstract class CleanupDatabase extends RoomDatabase {
 
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
-                Project[] startProjects = new Project[]{
-                        new Project(0, "Projet Tartampion", 0xFFEADAD1),
-                        new Project(0, "Projet Lucidia", 0xFFB4CDBA),
-                        new Project(0, "Projet " + "Circus", 0xFFA3CED2),
-                };
 
                 Log.i(TAG, "onCreate: ");
 
                 databaseWriteExecutor.execute(() -> {
                             ProjectDao projectDao = INSTANCE.projectDao();
                             projectDao.insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
+                    projectDao.insertProject(new Project(0, "Projet Lucidia", 0xFFB4CDBA));
+                    projectDao.insertProject(new Project(0, "Projet " + "Circus", 0xFFA3CED2));
                     Log.i(TAG, "onCreate: ajout projet 1");
                         });
-
-//                for (Project project : startProjects) {
-//                    ContentValues contentValues = new ContentValues();
-//                    contentValues.put("id", project.getId());
-//                    contentValues.put("name", project.getName());
-//                    contentValues.put("color", project.getColor());
-//                    db.insert("Project", OnConflictStrategy.IGNORE, contentValues);
-//                }
             }
         };
     }

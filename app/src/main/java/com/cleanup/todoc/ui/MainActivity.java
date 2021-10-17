@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     private MainViewModel vm;
 
-private List<Project> allProjects = new ArrayList<>();
+    private List<Project> allProjects = new ArrayList();
 
 
     /** List of all current tasks of the application */
@@ -86,14 +86,6 @@ private List<Project> allProjects = new ArrayList<>();
         super.onCreate(savedInstanceState);
 
         vm = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MainViewModel.class);
-
-        //db = CleanupDatabase.getInstance(getApplicationContext());
-        //db.projectDao().insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
-        //allProjects = db.projectDao().getAllProjects().getValue();
-
-        //Log.i(TAG, "onCreate: allProjects : " + allProjects.toString());
-
-
 
         setContentView(R.layout.activity_main);
 
@@ -273,7 +265,8 @@ private List<Project> allProjects = new ArrayList<>();
         final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         vm.getAllProjects().observe(this, projects -> {
-            allProjects = projects;
+            allProjects.clear();
+            allProjects.addAll(projects);
             adapter.notifyDataSetChanged();
         });
 
