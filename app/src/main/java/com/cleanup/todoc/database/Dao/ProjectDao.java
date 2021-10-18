@@ -11,21 +11,21 @@ import com.cleanup.todoc.model.Project;
 import java.util.List;
 
 @Dao
-    public interface ProjectDao {
+public interface ProjectDao {
 
-        @Query("SELECT * FROM Project WHERE id = :id")
-        LiveData<List<Project>> getProject(long id);
+    @Query("SELECT * FROM Project WHERE id = :id")
+    LiveData<List<Project>> getProject(long id);
 
     @Query("SELECT * FROM Project")
     LiveData<List<Project>> getAllProjects();
 
-        @Insert
-        long insertProject(Project project);
+    @Insert
+    long insertProject(Project project);
 
-        @Update
-        int updateProject(Project project);
+    @Update
+    int updateProject(Project project);
 
-        @Query("DELETE FROM Project WHERE id = :id")
-        int deleteProject(long id);
-    }
+    @Query("DELETE FROM Project WHERE id = :id")
+    int deleteProject(long id);
+}
 

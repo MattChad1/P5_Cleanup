@@ -25,14 +25,12 @@ import java.util.List;
  */
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
 
-
-
     @NonNull
-    private List<Task> tasks;
+    private List<MainViewStateItem> tasks;
     @NonNull
     private final DeleteTaskListener deleteTaskListener;
 
-    TasksAdapter(@NonNull final List<Task> tasks, @NonNull final DeleteTaskListener deleteTaskListener) {
+    TasksAdapter(@NonNull final List<MainViewStateItem> tasks, @NonNull final DeleteTaskListener deleteTaskListener) {
         this.tasks = tasks;
         this.deleteTaskListener = deleteTaskListener;
     }
@@ -42,7 +40,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
      *
      * @param tasks the list of tasks the adapter deals with to set
      */
-    void updateTasks(@NonNull final List<Task> tasks) {
+    void updateTasks(@NonNull final List<MainViewStateItem> tasks) {
         this.tasks = tasks;
         notifyDataSetChanged();
     }
@@ -106,22 +104,13 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
         /**
          * Binds a task to the item view.
-         * @param task the task to bind in the item view
+         * @param mainViewStateItem the task to bind in the item view
          */
-        void bind(Task task) {
-            lblTaskName.setText(task.getName());
-            imgDelete.setTag(task);
-
-            //final Project taskProject = task.getProject();
-            final Project taskProject = null;
-            if (taskProject != null) {
-                imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
-                lblProjectName.setText(taskProject.getName());
-            } else {
-                imgProject.setVisibility(View.INVISIBLE);
-                lblProjectName.setText("");
-            }
-
+        void bind(MainViewStateItem mainViewStateItem) {
+            lblTaskName.setText(mainViewStateItem.getNameTask());
+            imgDelete.setTag(mainViewStateItem);
+            lblProjectName.setText(mainViewStateItem.getProjectName());
+            imgProject.setSupportImageTintList(ColorStateList.valueOf(mainViewStateItem.getColorIcon()));
         }
     }
 }

@@ -14,6 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.cleanup.todoc.database.Dao.ProjectDao;
 import com.cleanup.todoc.database.Dao.TaskDao;
+import com.cleanup.todoc.database.Dao.TasksWithProjectDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -33,16 +34,14 @@ public abstract class CleanupDatabase extends RoomDatabase {
     // --- DAO ---
     public abstract ProjectDao projectDao();
     public abstract TaskDao taskDao();
+    public abstract TasksWithProjectDao tasksWithProjectDao();
 
     // --- INSTANCE ---
     public static CleanupDatabase getInstance(final Context context) {
         if (INSTANCE == null) {
-            Log.i(TAG, "getInstance: ");
             synchronized (CleanupDatabase.class) {
                 if (INSTANCE == null) {
-                    Log.i(TAG, "getInstance2: ");
-                    INSTANCE =
-                            Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
+                    INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
                 }
             }
         }
@@ -54,15 +53,15 @@ public abstract class CleanupDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
 
-                Log.i(TAG, "onCreate: ");
-
                 databaseWriteExecutor.execute(() -> {
                             ProjectDao projectDao = INSTANCE.projectDao();
+                            TaskDao taskDao = INSTANCE.taskDao();
                             projectDao.insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
                     projectDao.insertProject(new Project(0, "Projet Lucidia", 0xFFB4CDBA));
                     projectDao.insertProject(new Project(0, "Projet " + "Circus", 0xFFA3CED2));
-                    Log.i(TAG, "onCreate: ajout projet 1");
-                        });
+                    taskDao.insertTask(new Task(0, 1,  "Task 1 - Tartampion"));
+                    Log.i(TAG, "Prepopulate DB");
+                });
             }
         };
     }

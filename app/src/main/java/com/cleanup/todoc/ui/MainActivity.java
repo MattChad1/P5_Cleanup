@@ -29,6 +29,7 @@ import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -41,18 +42,18 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
 
-    private String TAG = "MainActivity";
+    private String TAG = "Log MainActivity";
 
     private MainViewModel vm;
 
-    private List<Project> allProjects = new ArrayList();
+    private List<String> allProjectsNames = new ArrayList();
 
 
     /** List of all current tasks of the application */
     @NonNull
-    private final ArrayList<Task> tasks = new ArrayList<>();
+    private List<MainViewStateItem> tasks = new ArrayList<>();
 
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private TasksAdapter adapter;
 
     /** The sort method to be used to display tasks */
     @NonNull
@@ -86,14 +87,21 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         super.onCreate(savedInstanceState);
 
         vm = new ViewModelProvider(this, ViewModelFactory.getInstance()).get(MainViewModel.class);
-
         setContentView(R.layout.activity_main);
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
+        adapter = new TasksAdapter(tasks, this);
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
+
+        vm.getAllTasks().observe(this, mainViewStateItems -> {
+            Log.i(TAG, "onCreate: MAJ tasks");
+            tasks.clear();
+            tasks.addAll(mainViewStateItems);
+            updateTasks();
+        });
 
         findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
     }
@@ -152,14 +160,14 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 // TODO: Replace this by id of persisted task
                 long id = (long) (Math.random() * 50000);
 
-                Task task = new Task(
-                        id,
-                        taskProject.getId(),
-                        taskName,
-                        new Date().getTime()
-                );
+//                Task task = new Task(
+//                        id,
+//                        taskProject.getId(),
+//                        taskName,
+//                        new Date().getTime()
+//                );
 
-                addTask(task);
+                //addTask(task);
                 dialogInterface.dismiss();
             }
             // If name has been set, but project has not been set (this should never occur)
@@ -190,10 +198,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * Adds the given task to the list of created tasks.
      *
-     * @param task the task to be added to the list
+     * @param mainViewStateItem the task to be added to the list
      */
-    private void addTask(@NonNull Task task) {
-        tasks.add(task);
+    private void addTask(@NonNull MainViewStateItem mainViewStateItem) {
+        tasks.add(mainViewStateItem);
         updateTasks();
     }
 
@@ -209,17 +217,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             listTasks.setVisibility(View.VISIBLE);
             switch (sortMethod) {
                 case ALPHABETICAL:
-                    Collections.sort(tasks, new Task.TaskAZComparator());
+                    Collections.sort(tasks, new MainViewStateItem.TaskAZComparator());
                     break;
                 case ALPHABETICAL_INVERTED:
-                    Collections.sort(tasks, new Task.TaskZAComparator());
+                    Collections.sort(tasks, new MainViewStateItem.TaskZAComparator());
                     break;
-                case RECENT_FIRST:
-                    Collections.sort(tasks, new Task.TaskRecentComparator());
-                    break;
-                case OLD_FIRST:
-                    Collections.sort(tasks, new Task.TaskOldComparator());
-                    break;
+//                case RECENT_FIRST:
+//                    Collections.sort(tasks, new Task.TaskRecentComparator());
+//                    break;
+//                case OLD_FIRST:
+//                    Collections.sort(tasks, new Task.TaskOldComparator());
+//                    break;
 
             }
             adapter.updateTasks(tasks);
@@ -262,17 +270,17 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * Sets the data of the Spinner with projects to associate to a new task
      */
     private void populateDialogSpinner() {
-        final ArrayAdapter<Project> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final ArrayAdapter<Project> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, allProjectsNames);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         vm.getAllProjects().observe(this, projects -> {
-            allProjects.clear();
-            allProjects.addAll(projects);
-            adapter.notifyDataSetChanged();
+            allProjectsNames.clear();
+            for (Project p: projects) allProjectsNames.add(p.getName());
+            adapter2.notifyDataSetChanged();
         });
 
 
         if (dialogSpinner != null) {
-            dialogSpinner.setAdapter(adapter);
+            dialogSpinner.setAdapter(adapter2);
         }
     }
 
