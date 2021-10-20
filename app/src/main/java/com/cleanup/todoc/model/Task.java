@@ -1,20 +1,15 @@
 package com.cleanup.todoc.model;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
-
-import com.cleanup.todoc.database.Dao.ProjectDao;
-
-import java.util.Comparator;
 
 @Entity(foreignKeys = @ForeignKey(entity = Project.class, parentColumns = "id", childColumns = "projectId"))
 public class Task {
 
     @PrimaryKey(autoGenerate = true)
-    private long id;
+    private long idTask;
 
     // clé commune
     private long projectId;
@@ -22,19 +17,19 @@ public class Task {
     // Suppress warning because setName is called in constructor
     @SuppressWarnings("NullableProblems")
     @NonNull
-    private String name;
+    private String nameTask;
 
     public long creationTimestamp;
 
-    public Task(long id, long projectId, @NonNull String name) {
-        this.setId(id);
+    public Task(long idTask, long projectId, @NonNull String nameTask) {
+        this.setIdTask(idTask);
         this.setProjectId(projectId);
-        this.setName(name);
+        this.setNameTask(nameTask);
         this.setCreationTimestamp();
     }
 
-    public long getId() {
-        return id;
+    public long getIdTask() {
+        return idTask;
     }
 
     public long getProjectId() {
@@ -45,31 +40,29 @@ public class Task {
         return creationTimestamp;
     }
 
-    private void setId(long id) {
-        this.id = id;
+    private void setIdTask(long idTask) {
+        this.idTask = idTask;
     }
 
     private void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 
-//    @Nullable
-//    public Project getProject() {
-//        return ProjectDao.getProject(projectId);
-//    }
-
     @NonNull
-    public String getName() {
-        return name;
+    public String getNameTask() {
+        return nameTask;
     }
 
-    private void setName(@NonNull String name) {
-        this.name = name;
+    private void setNameTask(@NonNull String nameTask) {
+        this.nameTask = nameTask;
     }
 
     private void setCreationTimestamp() {
-        this.creationTimestamp = System.currentTimeMillis()/1000;
+        this.creationTimestamp = System.currentTimeMillis() / 1000;
     }
 
-
+    @Override
+    public String toString() {
+        return "Task{" + "idTask=" + idTask + ", projectId=" + projectId + ", nameTask='" + nameTask + '\'' + ", creationTimestamp=" + creationTimestamp + '}';
+    }
 }

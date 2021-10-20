@@ -16,22 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.ViewModelFactory;
-import com.cleanup.todoc.database.CleanupDatabase;
-import com.cleanup.todoc.database.Dao.ProjectDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     /** List of all current tasks of the application */
     @NonNull
-    private List<MainViewStateItem> tasks = new ArrayList<>();
+    private List<TaskViewStateItem> tasks = new ArrayList<>();
 
     private TasksAdapter adapter;
 
@@ -198,10 +193,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * Adds the given task to the list of created tasks.
      *
-     * @param mainViewStateItem the task to be added to the list
+     * @param taskViewStateItem the task to be added to the list
      */
-    private void addTask(@NonNull MainViewStateItem mainViewStateItem) {
-        tasks.add(mainViewStateItem);
+    private void addTask(@NonNull TaskViewStateItem taskViewStateItem) {
+        tasks.add(taskViewStateItem);
         updateTasks();
     }
 
@@ -217,10 +212,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             listTasks.setVisibility(View.VISIBLE);
             switch (sortMethod) {
                 case ALPHABETICAL:
-                    Collections.sort(tasks, new MainViewStateItem.TaskAZComparator());
+                    Collections.sort(tasks, new TaskViewStateItem.TaskAZComparator());
                     break;
                 case ALPHABETICAL_INVERTED:
-                    Collections.sort(tasks, new MainViewStateItem.TaskZAComparator());
+                    Collections.sort(tasks, new TaskViewStateItem.TaskZAComparator());
                     break;
 //                case RECENT_FIRST:
 //                    Collections.sort(tasks, new Task.TaskRecentComparator());

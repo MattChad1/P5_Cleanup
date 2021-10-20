@@ -5,10 +5,13 @@ import androidx.room.Relation;
 
 import java.util.List;
 
-public class TasksWithProject {
-
+public class ProjectWithTasks {
     @Embedded public Project project;
     @Relation(parentColumn = "id", entityColumn = "projectId")
-    public Task task;
+    public List<Task> tasks;
 
+    @Override
+    public String toString() {
+        return "ProjectWithTasks{" + "project=" + project + ", tasks=" + tasks + '}';
+    }
 }

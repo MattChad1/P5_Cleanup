@@ -22,10 +22,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         return factory;
     }
 
-    // This field inherit the singleton property from the ViewModelFactory : it is scoped to the ViewModelFactory
-    // Ask your mentor about DI scopes (Singleton, ViewModelScope, ActivityScope)
     @NonNull
-    private final Repository repository;
+    Repository repository;
+
 
     private ViewModelFactory(@NonNull Repository repository) {
         this.repository = repository;

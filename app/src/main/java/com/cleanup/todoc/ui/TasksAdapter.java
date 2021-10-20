@@ -1,6 +1,5 @@
 package com.cleanup.todoc.ui;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
-import com.cleanup.todoc.database.CleanupDatabase;
-import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.List;
@@ -26,11 +23,11 @@ import java.util.List;
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
 
     @NonNull
-    private List<MainViewStateItem> tasks;
+    private List<TaskViewStateItem> tasks;
     @NonNull
     private final DeleteTaskListener deleteTaskListener;
 
-    TasksAdapter(@NonNull final List<MainViewStateItem> tasks, @NonNull final DeleteTaskListener deleteTaskListener) {
+    TasksAdapter(@NonNull final List<TaskViewStateItem> tasks, @NonNull final DeleteTaskListener deleteTaskListener) {
         this.tasks = tasks;
         this.deleteTaskListener = deleteTaskListener;
     }
@@ -40,7 +37,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
      *
      * @param tasks the list of tasks the adapter deals with to set
      */
-    void updateTasks(@NonNull final List<MainViewStateItem> tasks) {
+    void updateTasks(@NonNull final List<TaskViewStateItem> tasks) {
         this.tasks = tasks;
         notifyDataSetChanged();
     }
@@ -104,13 +101,13 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
         /**
          * Binds a task to the item view.
-         * @param mainViewStateItem the task to bind in the item view
+         * @param taskViewStateItem the task to bind in the item view
          */
-        void bind(MainViewStateItem mainViewStateItem) {
-            lblTaskName.setText(mainViewStateItem.getNameTask());
-            imgDelete.setTag(mainViewStateItem);
-            lblProjectName.setText(mainViewStateItem.getProjectName());
-            imgProject.setSupportImageTintList(ColorStateList.valueOf(mainViewStateItem.getColorIcon()));
+        void bind(TaskViewStateItem taskViewStateItem) {
+            lblTaskName.setText(taskViewStateItem.getNameTask());
+            imgDelete.setTag(taskViewStateItem);
+            lblProjectName.setText(taskViewStateItem.getProjectName());
+            imgProject.setSupportImageTintList(ColorStateList.valueOf(taskViewStateItem.getColorIcon()));
         }
     }
 }
