@@ -43,6 +43,12 @@ public class Repository {
         });
     }
 
+    public void deleteTask(Task task) {
+        CleanupDatabase.databaseWriteExecutor.execute(() -> {
+            taskDao.deleteTask(task);
+        });
+    }
+
 
     public LiveData<List<Project>> getProjectById (long id) {
     return projectDao.getProjectById(id);

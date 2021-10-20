@@ -47,7 +47,12 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void insert(Task task) { repository.insertTask(task); }
+    public void insertTask(Task task) { repository.insertTask(task); }
+    public void deleteTask(Task task) { repository.deleteTask(task); }
+
+
+
+
 
     public LiveData<List<Project>> getAllProjects() {
         return repository.getAllProjects();

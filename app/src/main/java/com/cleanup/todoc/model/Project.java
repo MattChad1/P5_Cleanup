@@ -36,8 +36,9 @@ public class Project {
         return color;
     }
 
+    @NonNull
     @Override
     public String toString() {
-        return "Project{" + "id=" + id + ", name='" + name + '\'' + ", color=" + color + '}';
+        return name;
     }
 }

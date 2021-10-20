@@ -41,10 +41,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     private MainViewModel vm;
 
-    private List<String> allProjectsNames = new ArrayList();
+    private List<Project> allProjects = new ArrayList();
 
-
-    /** List of all current tasks of the application */
     @NonNull
     private List<TaskViewStateItem> tasks = new ArrayList<>();
 
@@ -97,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             tasks.addAll(mainViewStateItems);
             updateTasks();
         });
-
         findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
     }
 
@@ -128,8 +125,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     @Override
     public void onDeleteTask(Task task) {
-        tasks.remove(task);
-        updateTasks();
+        vm.deleteTask(task);
     }
 
     /**
@@ -141,34 +137,25 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         // If dialog is open
         if (dialogEditText != null && dialogSpinner != null) {
             String taskName = dialogEditText.getText().toString();
-            Project taskProject = null;
-            if (dialogSpinner.getSelectedItem() instanceof Project) {
-                taskProject = (Project) dialogSpinner.getSelectedItem();
-            }
+            Project projectSelected = (Project) dialogSpinner.getSelectedItem();
 
             // If a name has not been set
             if (taskName.trim().isEmpty()) {
                 dialogEditText.setError(getString(R.string.empty_task_name));
             }
             // If both project and name of the task have been set
-            else if (taskProject != null) {
-                // TODO: Replace this by id of persisted task
-                long id = (long) (Math.random() * 50000);
+            else {
 
-//                Task task = new Task(
-//                        id,
-//                        taskProject.getId(),
-//                        taskName,
-//                        new Date().getTime()
-//                );
+                Task task = new Task(
+                        0,
+                        projectSelected.getId(),
+                        taskName
+                );
 
-                //addTask(task);
+                vm.insertTask(task);
                 dialogInterface.dismiss();
             }
             // If name has been set, but project has not been set (this should never occur)
-            else{
-                dialogInterface.dismiss();
-            }
         }
         // If dialog is already closed
         else {
@@ -188,16 +175,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         dialogSpinner = dialog.findViewById(R.id.project_spinner);
 
         populateDialogSpinner();
-    }
-
-    /**
-     * Adds the given task to the list of created tasks.
-     *
-     * @param taskViewStateItem the task to be added to the list
-     */
-    private void addTask(@NonNull TaskViewStateItem taskViewStateItem) {
-        tasks.add(taskViewStateItem);
-        updateTasks();
     }
 
     /**
@@ -252,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
             @Override
             public void onShow(DialogInterface dialogInterface) {
-
                 Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 button.setOnClickListener(view -> onPositiveButtonClick(dialog));
             }
@@ -265,14 +241,13 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * Sets the data of the Spinner with projects to associate to a new task
      */
     private void populateDialogSpinner() {
-        final ArrayAdapter<Project> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, allProjectsNames);
+        final ArrayAdapter<Project> adapter2 = new ArrayAdapter<Project>(this, android.R.layout.simple_spinner_item, allProjects);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         vm.getAllProjects().observe(this, projects -> {
-            allProjectsNames.clear();
-            for (Project p: projects) allProjectsNames.add(p.getName());
+            allProjects.clear();
+            allProjects.addAll(projects);
             adapter2.notifyDataSetChanged();
         });
-
 
         if (dialogSpinner != null) {
             dialogSpinner.setAdapter(adapter2);
