@@ -48,7 +48,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void insertTask(Task task) { repository.insertTask(task); }
-    public void deleteTask(Task task) { repository.deleteTask(task); }
+    public void deleteTask(long taskId) { repository.deleteTask(taskId); }
 
 
 

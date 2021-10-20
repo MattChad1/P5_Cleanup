@@ -43,9 +43,9 @@ public class Repository {
         });
     }
 
-    public void deleteTask(Task task) {
+    public void deleteTask(long taskId) {
         CleanupDatabase.databaseWriteExecutor.execute(() -> {
-            taskDao.deleteTask(task);
+            taskDao.deleteTask(taskId);
         });
     }
 

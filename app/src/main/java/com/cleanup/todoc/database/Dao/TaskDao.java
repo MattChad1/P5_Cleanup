@@ -25,8 +25,8 @@ public interface TaskDao {
     @Update
     int updateTask(Task task);
 
-    @Delete
-    void deleteTask(Task task);
+    @Query("DELETE FROM task WHERE idTask = :idTask")
+    void deleteTask(long idTask);
 
     @Transaction
     @Query("SELECT * FROM Project")

@@ -61,7 +61,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
 
     public interface DeleteTaskListener {
-        void onDeleteTask(Task task);
+        void onDeleteTask(long taskId);
     }
 
 
@@ -83,7 +83,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
          */
         TaskViewHolder(@NonNull View itemView, @NonNull DeleteTaskListener deleteTaskListener) {
             super(itemView);
-
             this.deleteTaskListener = deleteTaskListener;
 
             imgProject = itemView.findViewById(R.id.img_project);
@@ -91,21 +90,19 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblProjectName = itemView.findViewById(R.id.lbl_project_name);
             imgDelete = itemView.findViewById(R.id.img_delete);
 
-            imgDelete.setOnClickListener(view -> {
-                final Object tag = view.getTag();
-                if (tag instanceof Task) {
-                    TaskViewHolder.this.deleteTaskListener.onDeleteTask((Task) tag);
-                }
+            imgDelete.setOnClickListener(v -> {
+                final  Object tag = v.getTag();
+                TaskViewHolder.this.deleteTaskListener.onDeleteTask((long) tag);
             });
         }
 
         /**
-         * Binds a task to the item view.
+         * Binds a taskViewStateItem to the item view.
          * @param taskViewStateItem the task to bind in the item view
          */
         void bind(TaskViewStateItem taskViewStateItem) {
             lblTaskName.setText(taskViewStateItem.getNameTask());
-            imgDelete.setTag(taskViewStateItem);
+            imgDelete.setTag(taskViewStateItem.getTaskId());
             lblProjectName.setText(taskViewStateItem.getProjectName());
             imgProject.setSupportImageTintList(ColorStateList.valueOf(taskViewStateItem.getColorIcon()));
         }
