@@ -51,16 +51,19 @@ public class ProjectDaoTest {
 
     @Test
     public void getProjectByIdTest() throws InterruptedException {
+        projectDao.insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
+        projectDao.insertProject(new Project(0, "Projet Lucidia", 0xFFB4CDBA));
+        projectDao.insertProject(new Project(0, "Projet " + "Circus", 0xFFA3CED2));
+
         final Task task1 = new Task(1, 1, "task 1");
         final Task task2 = new Task(2, 2, "task 2");
         final Task task3 = new Task(3, 3, "task 3");
         final Task task4 = new Task(4, 4, "task 4");
 
         assertEquals("Projet Tartampion", ((Project) LiveDataTestUtils.getOrAwaitValue(projectDao.getProjectById(task1.getProjectId()))).getName());
-//        assertEquals("Projet Lucidia", (projectDao.getProjectById(task2.getProjectId()).getValue()).getName());
-//        assertEquals("Projet Circus", (projectDao.getProjectById(task3.getProjectId()).getValue()).getName());
-        assertNull(projectDao.getProjectById(task1.getProjectId()));
-
+        assertEquals("Projet Lucidia", ((Project) LiveDataTestUtils.getOrAwaitValue(projectDao.getProjectById(task2.getProjectId()))).getName());
+        assertEquals("Projet Circus", ((Project) LiveDataTestUtils.getOrAwaitValue(projectDao.getProjectById(task3.getProjectId()))).getName());
+        //       assertNull(projectDao.getProjectById(task4.getProjectId()));
 
     }
 
@@ -73,6 +76,15 @@ public class ProjectDaoTest {
 
         assertEquals(projetInserted.getName(), testProject.getName());
         assertEquals(projetInserted.getColor(), testProject.getColor());
+    }
 
+    @Test
+    public void deleteProjectTest() throws InterruptedException {
+
+        final Project testProject = new Project(0, "Test project", -25000);
+        long idInsert = projectDao.insertProject(testProject);
+        projectDao.deleteProject(idInsert);
+        List<Project> projects = LiveDataTestUtils.getOrAwaitValue(projectDao.getAllProjects());
+        assertEquals(0, projects.size());
     }
 }
