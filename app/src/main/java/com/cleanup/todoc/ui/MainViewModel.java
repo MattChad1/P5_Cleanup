@@ -55,8 +55,6 @@ public class MainViewModel extends ViewModel {
                         break;
                 }
                 tasksToDisplayMediatorLD.setValue(taskViewStateItems);
-
-
             }
         }
     });

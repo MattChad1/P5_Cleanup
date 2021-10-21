@@ -3,6 +3,7 @@ package com.cleanup.todoc.model;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(foreignKeys = @ForeignKey(entity = Project.class, parentColumns = "id", childColumns = "projectId"))
@@ -26,6 +27,13 @@ public class Task {
         this.setProjectId(projectId);
         this.setNameTask(nameTask);
         this.setCreationTimestamp();
+    }
+    @Ignore
+    public Task(long idTask, long projectId, @NonNull String nameTask, long creationTimestamp) {
+        this.setIdTask(idTask);
+        this.setProjectId(projectId);
+        this.setNameTask(nameTask);
+        this.setCreationTimestamp(creationTimestamp);
     }
 
     public long getIdTask() {
@@ -59,6 +67,9 @@ public class Task {
 
     private void setCreationTimestamp() {
         this.creationTimestamp = System.currentTimeMillis() / 1000;
+    }
+    private void setCreationTimestamp(long timestamp) {
+        this.creationTimestamp = timestamp;
     }
 
     @Override

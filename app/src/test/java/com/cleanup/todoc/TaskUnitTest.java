@@ -1,8 +1,18 @@
 package com.cleanup.todoc;
 
+import com.cleanup.todoc.database.CleanupDatabase;
+import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.repository.Repository;
+import com.cleanup.todoc.ui.MainViewModel;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,23 +22,57 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
+import android.app.Application;
+import android.content.Context;
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
+
 /**
  * Unit tests for tasks
  *
  * @author Gaëtan HERFRAY
  */
+
+@RunWith(MockitoJUnitRunner.class)
 public class TaskUnitTest {
+
+    @Mock
+    private Application application;
+
+    //Context context = ApplicationProvider.getApplicationContext();
+
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
+
+    private Repository repository;
+
+    private CleanupDatabase db;
+
+    @Before
+    public void setUp() {
+    //application = MyApplication.getInstance();
+
+        repository = new Repository(application.getApplicationContext());
+        MainViewModel vm = new MainViewModel(repository);
+
+
+
+    }
+
     @Test
     public void test_projects() {
-//        final Task task1 = new Task(1, 1, "task 1", new Date().getTime());
-//        final Task task2 = new Task(2, 2, "task 2", new Date().getTime());
-//        final Task task3 = new Task(3, 3, "task 3", new Date().getTime());
-//        final Task task4 = new Task(4, 4, "task 4", new Date().getTime());
-//
-//        assertEquals("Projet Tartampion", task1.getProject().getName());
-//        assertEquals("Projet Lucidia", task2.getProject().getName());
-//        assertEquals("Projet Circus", task3.getProject().getName());
-//        assertNull(task4.getProject());
+        final Task task1 = new Task(1, 1, "task 1");
+        final Task task2 = new Task(2, 2, "task 2");
+        final Task task3 = new Task(3, 3, "task 3");
+        final Task task4 = new Task(4, 4, "task 4");
+
+        assertEquals("Projet Tartampion", ((Project) repository.getProjectById(task1.getProjectId()).getValue()).getName());
+        assertEquals("Projet Lucidia", ((Project) repository.getProjectById(task2.getProjectId()).getValue()).getName());
+        assertEquals("Projet Circus", ((Project) repository.getProjectById(task3.getProjectId()).getValue()).getName());
+        assertNull(repository.getProjectById(task1.getProjectId()));
     }
 
 //    @Test
@@ -47,7 +91,7 @@ public class TaskUnitTest {
 //        assertSame(tasks.get(1), task3);
 //        assertSame(tasks.get(2), task2);
 //    }
-//
+
 //    @Test
 //    public void test_za_comparator() {
 //        final Task task1 = new Task(1, 1, "aaa", 123);

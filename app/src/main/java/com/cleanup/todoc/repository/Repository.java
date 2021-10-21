@@ -1,12 +1,12 @@
 package com.cleanup.todoc.repository;
 
-import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
 import com.cleanup.todoc.database.CleanupDatabase;
-import com.cleanup.todoc.database.Dao.ProjectDao;
-import com.cleanup.todoc.database.Dao.TaskDao;
+import com.cleanup.todoc.database.dao.ProjectDao;
+import com.cleanup.todoc.database.dao.TaskDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.model.ProjectWithTasks;
@@ -17,10 +17,11 @@ public class Repository {
 
     private ProjectDao projectDao;
     private TaskDao taskDao;
+    private CleanupDatabase db;
 
 
-    public Repository(Application application) {
-        CleanupDatabase db = CleanupDatabase.getInstance(application);
+    public Repository(Context context) {
+        db = CleanupDatabase.getInstance(context);
         projectDao = db.projectDao();
         taskDao = db.taskDao();
     }
@@ -50,7 +51,7 @@ public class Repository {
     }
 
 
-    public LiveData<List<Project>> getProjectById (long id) {
+    public LiveData<Project> getProjectById (long id) {
     return projectDao.getProjectById(id);
     }
 

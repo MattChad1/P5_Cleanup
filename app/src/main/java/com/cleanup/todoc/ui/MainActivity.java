@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cleanup.todoc.BuildConfig;
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.ViewModelFactory;
 import com.cleanup.todoc.model.Project;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         listTasks.setAdapter(adapter);
 
         vm.getTasksToDisplayMediatorLD().observe(this, taskViewStateItems -> {
-            Log.i(TAG, "onCreate: MAJ tasks");
+            if (BuildConfig.DEBUG) Log.i(TAG, "onCreate: MAJ tasks");
             tasks.clear();
             tasks.addAll(taskViewStateItems);
             if (tasks.size() == 0) {

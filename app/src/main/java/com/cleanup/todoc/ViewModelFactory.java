@@ -15,7 +15,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (factory == null) {
             synchronized (ViewModelFactory.class) {
                 if (factory == null) {
-                    factory = new ViewModelFactory(new Repository(MyApplication.getInstance()));
+                    factory = new ViewModelFactory(new Repository(MyApplication.getInstance().getApplicationContext()));
                 }
             }
         }

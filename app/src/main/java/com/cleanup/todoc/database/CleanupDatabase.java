@@ -9,8 +9,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.cleanup.todoc.database.Dao.ProjectDao;
-import com.cleanup.todoc.database.Dao.TaskDao;
+import com.cleanup.todoc.BuildConfig;
+import com.cleanup.todoc.database.dao.ProjectDao;
+import com.cleanup.todoc.database.dao.TaskDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
@@ -36,8 +37,7 @@ public abstract class CleanupDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (CleanupDatabase.class) {
                 if (INSTANCE == null) {
-                    Log.i(TAG, "getInstance: ");
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
+                    INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
                 }
             }
         }
@@ -47,7 +47,6 @@ public abstract class CleanupDatabase extends RoomDatabase {
     private final static RoomDatabase.Callback roomCallBack = new RoomDatabase.Callback() {
 
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            Log.i(TAG, "onCreate: ");
             super.onCreate(db);
 
             databaseWriteExecutor.execute(() -> {
@@ -59,7 +58,7 @@ public abstract class CleanupDatabase extends RoomDatabase {
                 taskDao.insertTask(new Task(0, 1, "Task 1 - Tartampion"));
                 taskDao.insertTask(new Task(0, 1, "Task 2 - Tartampion"));
                 taskDao.insertTask(new Task(0, 2, "Task 1 - Lucidia"));
-                Log.i(TAG, "Prepopulate DB");
+                if (BuildConfig.DEBUG) Log.i(TAG, "Prepopulate DB");
             });
         }
     };
