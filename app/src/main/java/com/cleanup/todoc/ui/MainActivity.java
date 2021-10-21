@@ -48,10 +48,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     private TasksAdapter adapter;
 
-    /** The sort method to be used to display tasks */
-    @NonNull
-    private SortMethod sortMethod = SortMethod.NONE;
-
     /** Dialog to create a new task */
     @Nullable
     public AlertDialog dialog = null;
@@ -89,11 +85,19 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        vm.getAllTasks().observe(this, mainViewStateItems -> {
+        vm.getTasksToDisplayMediatorLD().observe(this, taskViewStateItems -> {
             Log.i(TAG, "onCreate: MAJ tasks");
             tasks.clear();
-            tasks.addAll(mainViewStateItems);
-            updateTasks();
+            tasks.addAll(taskViewStateItems);
+            if (tasks.size() == 0) {
+                lblNoTasks.setVisibility(View.VISIBLE);
+                listTasks.setVisibility(View.GONE);
+            } else {
+                lblNoTasks.setVisibility(View.GONE);
+                listTasks.setVisibility(View.VISIBLE);
+            }
+
+            adapter.notifyDataSetChanged();
         });
         findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
     }
@@ -109,18 +113,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         int id = item.getItemId();
 
         if (id == R.id.filter_alphabetical) {
-            sortMethod = SortMethod.ALPHABETICAL;
+            vm.updateSortMethod(MainViewModel.SortMethod.ALPHABETICAL);
         } else if (id == R.id.filter_alphabetical_inverted) {
-            sortMethod = SortMethod.ALPHABETICAL_INVERTED;
+            vm.updateSortMethod(MainViewModel.SortMethod.ALPHABETICAL_INVERTED);
         } else if (id == R.id.filter_oldest_first) {
-            sortMethod = SortMethod.OLD_FIRST;
+            vm.updateSortMethod(MainViewModel.SortMethod.OLD_FIRST);
         } else if (id == R.id.filter_recent_first) {
-            sortMethod = SortMethod.RECENT_FIRST;
+            vm.updateSortMethod(MainViewModel.SortMethod.RECENT_FIRST);
         }
-
-        updateTasks();
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -168,43 +169,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      */
     private void showAddTaskDialog() {
         final AlertDialog dialog = getAddTaskDialog();
-
         dialog.show();
-
         dialogEditText = dialog.findViewById(R.id.txt_task_name);
         dialogSpinner = dialog.findViewById(R.id.project_spinner);
-
         populateDialogSpinner();
     }
 
-    /**
-     * Updates the list of tasks in the UI
-     */
-    private void updateTasks() {
-        if (tasks.size() == 0) {
-            lblNoTasks.setVisibility(View.VISIBLE);
-            listTasks.setVisibility(View.GONE);
-        } else {
-            lblNoTasks.setVisibility(View.GONE);
-            listTasks.setVisibility(View.VISIBLE);
-            switch (sortMethod) {
-                case ALPHABETICAL:
-                    Collections.sort(tasks, new TaskViewStateItem.TaskAZComparator());
-                    break;
-                case ALPHABETICAL_INVERTED:
-                    Collections.sort(tasks, new TaskViewStateItem.TaskZAComparator());
-                    break;
-//                case RECENT_FIRST:
-//                    Collections.sort(tasks, new Task.TaskRecentComparator());
-//                    break;
-//                case OLD_FIRST:
-//                    Collections.sort(tasks, new Task.TaskOldComparator());
-//                    break;
-
-            }
-            adapter.updateTasks(tasks);
-        }
-    }
 
     /**
      * Returns the dialog allowing the user to create a new task.
@@ -256,29 +226,5 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
 
 
-    /**
-     * List of all possible sort methods for task
-     */
-    private enum SortMethod {
-        /**
-         * Sort alphabetical by name
-         */
-        ALPHABETICAL,
-        /**
-         * Inverted sort alphabetical by name
-         */
-        ALPHABETICAL_INVERTED,
-        /**
-         * Lastly created first
-         */
-        RECENT_FIRST,
-        /**
-         * First created first
-         */
-        OLD_FIRST,
-        /**
-         * No sort
-         */
-        NONE
-    }
+
 }
