@@ -15,10 +15,9 @@ import java.util.List;
 
 public class Repository {
 
-    private ProjectDao projectDao;
-    private TaskDao taskDao;
+    private final ProjectDao projectDao;
+    private final TaskDao taskDao;
     private CleanupDatabase db;
-
 
     public Repository(Context context) {
         db = CleanupDatabase.getInstance(context);
@@ -50,12 +49,11 @@ public class Repository {
         });
     }
 
-
-    public LiveData<Project> getProjectById (long id) {
-    return projectDao.getProjectById(id);
+    public LiveData<Project> getProjectById(long id) {
+        return projectDao.getProjectById(id);
     }
 
-    public LiveData<List<ProjectWithTasks>> getTaskWithProject() {
-        return taskDao.getTaskWithProject();
+    public LiveData<List<ProjectWithTasks>> getProjectWithTasks() {
+        return taskDao.getProjectWithTasks();
     }
 }

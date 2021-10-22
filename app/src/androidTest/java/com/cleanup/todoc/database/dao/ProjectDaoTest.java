@@ -1,38 +1,32 @@
 package com.cleanup.todoc.database.dao;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+
+import android.graphics.Color;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.room.Dao;
 import androidx.room.Room;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.runner.AndroidJUnit4;
 
 import com.cleanup.todoc.database.CleanupDatabase;
 import com.cleanup.todoc.model.Project;
-import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.util.LiveDataTestUtils;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-@RunWith(AndroidJUnit4.class)
 public class ProjectDaoTest {
 
     private CleanupDatabase db;
     private ProjectDao projectDao;
-    private TaskDao taskDao;
+
+    final Project testProject1 = new Project(0, "Test project", Color.parseColor("#003366"));
+    final Project testProject2 = new Project(0, "Test project 2", Color.parseColor("#552288"));
+    final Project testProject3 = new Project(0, "Test project 3", Color.parseColor("#112233"));
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -41,7 +35,6 @@ public class ProjectDaoTest {
     public void setup() {
         db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), CleanupDatabase.class).allowMainThreadQueries().build();
         projectDao = db.projectDao();
-        taskDao = db.taskDao();
     }
 
     @After
@@ -50,39 +43,27 @@ public class ProjectDaoTest {
     }
 
     @Test
-    public void getProjectByIdTest() throws InterruptedException {
-        projectDao.insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
-        projectDao.insertProject(new Project(0, "Projet Lucidia", 0xFFB4CDBA));
-        projectDao.insertProject(new Project(0, "Projet " + "Circus", 0xFFA3CED2));
-
-        final Task task1 = new Task(1, 1, "task 1");
-        final Task task2 = new Task(2, 2, "task 2");
-        final Task task3 = new Task(3, 3, "task 3");
-        final Task task4 = new Task(4, 4, "task 4");
-
-        assertEquals("Projet Tartampion", ((Project) LiveDataTestUtils.getOrAwaitValue(projectDao.getProjectById(task1.getProjectId()))).getName());
-        assertEquals("Projet Lucidia", ((Project) LiveDataTestUtils.getOrAwaitValue(projectDao.getProjectById(task2.getProjectId()))).getName());
-        assertEquals("Projet Circus", ((Project) LiveDataTestUtils.getOrAwaitValue(projectDao.getProjectById(task3.getProjectId()))).getName());
-        //       assertNull(projectDao.getProjectById(task4.getProjectId()));
-
-    }
-
-    @Test
-    public void insertProjectTest() throws InterruptedException {
-        final Project testProject = new Project(0, "Test project", -25000);
-
-        long idInsert = projectDao.insertProject(testProject);
+    public void insertProject() throws InterruptedException {
+        long idInsert = projectDao.insertProject(testProject1);
         Project projetInserted = LiveDataTestUtils.getOrAwaitValue(projectDao.getProjectById(idInsert));
 
-        assertEquals(projetInserted.getName(), testProject.getName());
-        assertEquals(projetInserted.getColor(), testProject.getColor());
+        assertEquals(projetInserted.getName(), testProject1.getName());
+        assertEquals(projetInserted.getColor(), testProject1.getColor());
     }
 
     @Test
-    public void deleteProjectTest() throws InterruptedException {
+    public void getAllProjects() throws InterruptedException {
+        projectDao.insertProject(testProject1);
+        projectDao.insertProject(testProject2);
+        projectDao.insertProject(testProject3);
 
-        final Project testProject = new Project(0, "Test project", -25000);
-        long idInsert = projectDao.insertProject(testProject);
+        List<Project> projetsInserted = LiveDataTestUtils.getOrAwaitValue(projectDao.getAllProjects());
+        assertEquals(3, projetsInserted.size());
+    }
+
+    @Test
+    public void deleteProject() throws InterruptedException {
+        long idInsert = projectDao.insertProject(testProject1);
         projectDao.deleteProject(idInsert);
         List<Project> projects = LiveDataTestUtils.getOrAwaitValue(projectDao.getAllProjects());
         assertEquals(0, projects.size());

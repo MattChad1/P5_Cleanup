@@ -37,7 +37,8 @@ public abstract class CleanupDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (CleanupDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
+                    if (BuildConfig.DEBUG) INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
+                    else INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").build();
                 }
             }
         }

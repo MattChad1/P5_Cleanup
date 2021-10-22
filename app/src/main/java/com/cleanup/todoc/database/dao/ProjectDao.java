@@ -22,9 +22,6 @@ public interface ProjectDao {
     @Insert
     long insertProject(Project project);
 
-    @Update
-    int updateProject(Project project);
-
     @Query("DELETE FROM Project WHERE id = :id")
     int deleteProject(long id);
 }

@@ -19,15 +19,12 @@ public interface TaskDao {
     LiveData<List<Task>> getAllTasks();
 
     @Insert
-    void insertTask(Task task);
-
-    @Update
-    int updateTask(Task task);
+    long insertTask(Task task);
 
     @Query("DELETE FROM task WHERE idTask = :idTask")
     void deleteTask(long idTask);
 
     @Transaction
     @Query("SELECT * FROM Project")
-    LiveData<List<ProjectWithTasks>> getTaskWithProject();
+    LiveData<List<ProjectWithTasks>> getProjectWithTasks();
 }

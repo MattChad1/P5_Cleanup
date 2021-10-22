@@ -35,33 +35,30 @@ public class MainViewModel extends ViewModel {
         Log.i(TAG, "MainViewModel: ");
 
         tasksToDisplayMediatorLD.addSource(getAllTasks(), tasksToDisplayMediatorLD::setValue);
-        tasksToDisplayMediatorLD.addSource(getSortMethodMutableLiveData(), new Observer<SortMethod>() {
-            @Override
-            public void onChanged(SortMethod sortMethod) {
-                List<TaskViewStateItem> taskViewStateItems = allTasksMutableLiveData.getValue();
-                if (taskViewStateItems!=null) {
-                switch (sortMethod) {
-                    case ALPHABETICAL:
-                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskAZComparator());
-                        break;
-                    case ALPHABETICAL_INVERTED:
-                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskZAComparator());
-                        break;
-                    case RECENT_FIRST:
-                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskRecentComparator());
-                        break;
-                    case OLD_FIRST:
-                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskOldComparator());
-                        break;
-                }
-                tasksToDisplayMediatorLD.setValue(taskViewStateItems);
+        tasksToDisplayMediatorLD.addSource(getSortMethodMutableLiveData(), sortMethod -> {
+            List<TaskViewStateItem> taskViewStateItems = allTasksMutableLiveData.getValue();
+            if (taskViewStateItems!=null) {
+            switch (sortMethod) {
+                case ALPHABETICAL:
+                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskAZComparator());
+                    break;
+                case ALPHABETICAL_INVERTED:
+                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskZAComparator());
+                    break;
+                case RECENT_FIRST:
+                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskRecentComparator());
+                    break;
+                case OLD_FIRST:
+                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskOldComparator());
+                    break;
             }
+            tasksToDisplayMediatorLD.setValue(taskViewStateItems);
         }
     });
     }
 
     public LiveData<List<TaskViewStateItem>> getAllTasks() {
-        return Transformations.map(repository.getTaskWithProject(), allProjectsWithTasks -> {
+        return Transformations.map(repository.getProjectWithTasks(), allProjectsWithTasks -> {
             List<TaskViewStateItem> liststateitems = new ArrayList<>();
             if (allProjectsWithTasks != null) {
                 for (ProjectWithTasks pwt : allProjectsWithTasks) {
