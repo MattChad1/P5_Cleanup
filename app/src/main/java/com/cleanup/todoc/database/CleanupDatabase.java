@@ -21,8 +21,6 @@ import java.util.concurrent.Executors;
 @Database(entities = {Project.class, Task.class}, version = 1, exportSchema = false)
 public abstract class CleanupDatabase extends RoomDatabase {
 
-    private static String TAG = "Database class";
-
     // --- SINGLETON ---
     private static volatile CleanupDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -55,11 +53,10 @@ public abstract class CleanupDatabase extends RoomDatabase {
                 TaskDao taskDao = INSTANCE.taskDao();
                 projectDao.insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
                 projectDao.insertProject(new Project(0, "Projet Lucidia", 0xFFB4CDBA));
-                projectDao.insertProject(new Project(0, "Projet " + "Circus", 0xFFA3CED2));
+                projectDao.insertProject(new Project(0, "Projet Circus", 0xFFA3CED2));
                 taskDao.insertTask(new Task(0, 1, "Task 1 - Tartampion"));
                 taskDao.insertTask(new Task(0, 1, "Task 2 - Tartampion"));
                 taskDao.insertTask(new Task(0, 2, "Task 1 - Lucidia"));
-                if (BuildConfig.DEBUG) Log.i(TAG, "Prepopulate DB");
             });
         }
     };

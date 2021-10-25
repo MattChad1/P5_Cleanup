@@ -1,0 +1,288 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+  namespace com.cleanup.todoc {
+
+
+
+
+    namespace model {
+      class com.cleanup.todoc.model.Project {
+          - color : Integer
+          - id : long
+          - name : String
+          + Project()
+          + getColor()
+          + getId()
+          + getName()
+          + toString()
+      }
+
+
+
+      class com.cleanup.todoc.model.Task {
+          + creationTimestamp : long
+          - idTask : long
+          - nameTask : String
+          - projectId : long
+          + Task()
+          + Task()
+          + getCreationTimestamp()
+          + getIdTask()
+          + getNameTask()
+          + getProjectId()
+          + toString()
+          - setCreationTimestamp()
+          - setCreationTimestamp()
+          - setIdTask()
+          - setNameTask()
+          - setProjectId()
+      }
+
+      class com.cleanup.todoc.model.ProjectWithTasks {
+                + tasks : List<Task>
+                + toString()
+            }
+
+
+      com.cleanup.todoc.model.Project "1" o-- "0..*" com.cleanup.todoc.model.Task
+      com.cleanup.todoc.model.ProjectWithTasks -- (com.cleanup.todoc.model.Task, com.cleanup.todoc.model.Project)
+
+
+
+}
+
+       namespace database {
+          namespace dao {
+            interface com.cleanup.todoc.database.dao.ProjectDao {
+                {abstract} + deleteProject()
+                {abstract} + getAllProjects()
+                {abstract} + getProjectById()
+                {abstract} + insertProject()
+            }
+
+
+
+            interface com.cleanup.todoc.database.dao.TaskDao {
+                {abstract} + deleteTask()
+                {abstract} + getAllTasks()
+                {abstract} + getProjectWithTasks()
+                {abstract} + insertTask()
+            }
+            }
+
+
+              abstract class com.cleanup.todoc.database.CleanupDatabase {
+                  {static} + databaseWriteExecutor : ExecutorService
+                  {static} - INSTANCE : CleanupDatabase
+                  {static} - NUMBER_OF_THREADS : int
+                  {static} - roomCallBack : Callback
+                  {static} + getInstance()
+                  {abstract} + projectDao()
+                  {abstract} + taskDao()
+              }
+              }
+
+
+
+
+com.cleanup.todoc.database.CleanupDatabase -- com.cleanup.todoc.database.dao.ProjectDao
+com.cleanup.todoc.database.CleanupDatabase -- com.cleanup.todoc.database.dao.TaskDao
+
+namespace repository {
+      class com.cleanup.todoc.repository.Repository {
+          + Repository()
+          + deleteTask()
+          + getAllProjects()
+          + getAllTasks()
+          + getProjectById()
+          + getProjectWithTasks()
+          + insert()
+          + insertTask()
+      }
+    }
+
+      com.cleanup.todoc.repository.Repository -- com.cleanup.todoc.database.CleanupDatabase
+      com.cleanup.todoc.repository.Repository -- com.cleanup.todoc.database.dao.ProjectDao
+      com.cleanup.todoc.repository.Repository -- com.cleanup.todoc.database.dao.TaskDao
+
+      com.cleanup.todoc.database.dao.TaskDao -- com.cleanup.todoc.model.Task
+      com.cleanup.todoc.database.dao.TaskDao -- com.cleanup.todoc.model.ProjectWithTasks
+      com.cleanup.todoc.database.dao.ProjectDao -- com.cleanup.todoc.model.Project
+
+
+namespace ui {
+      class com.cleanup.todoc.ui.MainViewModel {
+          ~ TAG : String
+          - allTasksMutableLiveData : MutableLiveData<List<TaskViewStateItem>>
+          - sortMethodMutableLiveData : MutableLiveData<SortMethod>
+          - tasksToDisplayMediatorLD : MediatorLiveData<List<TaskViewStateItem>>
+          + MainViewModel()
+          + deleteTask()
+          + getAllProjects()
+          + getAllTasks()
+          + getSortMethodMutableLiveData()
+          + getTasksToDisplayMediatorLD()
+          + insertTask()
+          + updateSortMethod()
+      }
+
+enum com.cleanup.todoc.ui.MainViewModel.SortMethod {
+        ALPHABETICAL
+        ALPHABETICAL_INVERTED
+        NONE
+        OLD_FIRST
+        RECENT_FIRST
+      }
+
+class com.cleanup.todoc.ui.TaskViewStateItem {
+          - colorIcon : int
+          - creationTimestamp : long
+          - nameTask : String
+          - projectName : String
+          - taskId : long
+          + TaskViewStateItem()
+          + getColorIcon()
+          + getCreationTimestamp()
+          + getNameTask()
+          + getProjectName()
+          + getTaskId()
+          + toString()
+      }
+
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskAZComparator {
+                + compare()
+            }
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskOldComparator {
+                      + compare()
+                  }
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskRecentComparator {
+                            + compare()
+                        }
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskZAComparator {
+                                  + compare()
+                              }
+      class com.cleanup.todoc.ui.TasksAdapter {
+                                        - tasks : List<TaskViewStateItem>
+                                        + getItemCount()
+                                        + onBindViewHolder()
+                                        + onCreateViewHolder()
+                                        ~ TasksAdapter()
+                                        ~ updateTasks()
+                                    }
+                                    class com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder {
+                                              - imgDelete : AppCompatImageView
+                                              - imgProject : AppCompatImageView
+                                              - lblProjectName : TextView
+                                              - lblTaskName : TextView
+                                              ~ TaskViewHolder()
+                                              ~ bind()
+                                          }
+                                     interface com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener {
+                                              {abstract} + onDeleteTask()
+                                          }
+
+
+
+
+
+      class com.cleanup.todoc.ui.MainActivity {
+          + dialog : AlertDialog
+          - TAG : String
+          - allProjects : List<Project>
+          - dialogEditText : EditText
+          - dialogSpinner : Spinner
+          - lblNoTasks : TextView
+          - listTasks : RecyclerView
+          - tasks : List<TaskViewStateItem>
+          + onCreate()
+          + onCreateOptionsMenu()
+          + onDeleteTask()
+          + onOptionsItemSelected()
+          - getAddTaskDialog()
+          - onPositiveButtonClick()
+          - populateDialogSpinner()
+          - showAddTaskDialog()
+      }
+    }
+
+    class com.cleanup.todoc.ViewModelFactory {
+            {static} - factory : ViewModelFactory
+            + create()
+            {static} + getInstance()
+            - ViewModelFactory()
+        }
+
+
+    com.cleanup.todoc.ui.MainActivity ..|> com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener
+     com.cleanup.todoc.ui.TasksAdapter +-- com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener
+     com.cleanup.todoc.ui.TasksAdapter o-- com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder
+      com.cleanup.todoc.ui.MainActivity o-- com.cleanup.todoc.ui.TasksAdapter : adapter
+      com.cleanup.todoc.ui.MainActivity -- com.cleanup.todoc.ui.MainViewModel
+      com.cleanup.todoc.ui.MainViewModel -right-> com.cleanup.todoc.ui.MainViewModel.SortMethod
+      com.cleanup.todoc.ui.MainViewModel -right-> com.cleanup.todoc.repository.Repository : repository
+       com.cleanup.todoc.ui.MainViewModel o-- com.cleanup.todoc.ui.TaskViewStateItem : génère >
+       com.cleanup.todoc.ui.TaskViewStateItem -- com.cleanup.todoc.ui.MainActivity : datas >
+      com.cleanup.todoc.ui.TaskViewStateItem *-- com.cleanup.todoc.ui.TaskViewStateItem.TaskAZComparator
+      com.cleanup.todoc.ui.TaskViewStateItem *-- com.cleanup.todoc.ui.TaskViewStateItem.TaskZAComparator
+      com.cleanup.todoc.ui.TaskViewStateItem *-- com.cleanup.todoc.ui.TaskViewStateItem.TaskOldComparator
+      com.cleanup.todoc.ui.TaskViewStateItem *-- com.cleanup.todoc.ui.TaskViewStateItem.TaskRecentComparator
+
+
+com.cleanup.todoc.ui.TaskViewStateItem.TaskAZComparator .[hidden].> com.cleanup.todoc.ui.TaskViewStateItem.TaskZAComparator
+com.cleanup.todoc.ui.TaskViewStateItem.TaskOldComparator .[hidden].> com.cleanup.todoc.ui.TaskViewStateItem.TaskRecentComparator
+
+
+      com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder -- com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener : deleteTaskListener
+
+com.cleanup.todoc.ui.MainActivity -- com.cleanup.todoc.ViewModelFactory
+com.cleanup.todoc.ViewModelFactory -- com.cleanup.todoc.ui.MainViewModel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+
+
+
+
+
+
+
+'abstract class AbstractList
+'abstract AbstractCollection
+'interface List
+'interface Collection
+'
+'List <|-- AbstractList
+'Collection <|-- AbstractCollection
+'
+'Collection <|- List
+'AbstractCollection <|- AbstractList
+'AbstractList <|-- ArrayList
+'
+'class ArrayList {
+'Object[] elementData
+'size()
+'}
+'
+'enum TimeUnit {
+'DAYS
+'HOURS
+'MINUTES
+'}
+
+@enduml

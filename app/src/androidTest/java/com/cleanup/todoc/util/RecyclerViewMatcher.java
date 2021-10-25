@@ -1,4 +1,4 @@
-package com.cleanup.todoc;
+package com.cleanup.todoc.util;
 
 import android.content.res.Resources;
 import android.view.View;
@@ -37,9 +37,7 @@ public class RecyclerViewMatcher {
                     try {
                         idDescription = this.resources.getResourceName(recyclerViewId);
                     } catch (Resources.NotFoundException var4) {
-                        idDescription = String.format("%s (resource name not found)",
-                                Integer.valueOf
-                                        (recyclerViewId));
+                        idDescription = String.format("%s (resource name not found)", recyclerViewId);
                     }
                 }
 

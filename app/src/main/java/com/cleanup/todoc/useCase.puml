@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+
+
+Collaborateur -> (Consulter la liste des tâches)
+Collaborateur --> (Trier la liste des tâches)
+Collaborateur --> (Ajouter une tâche)
+Collaborateur --> (Supprimer une tâche)
+
+note bottom of (Trier la liste des tâches)
+Alphabétique
++/- Récent
+end note
+@enduml

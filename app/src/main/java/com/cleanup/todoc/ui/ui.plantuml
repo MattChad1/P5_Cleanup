@@ -1,0 +1,185 @@
+@startuml
+
+title __UI's Class Diagram__\n
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.MainActivity {
+          + dialog : AlertDialog
+          - TAG : String
+          - allProjects : List<Project>
+          - dialogEditText : EditText
+          - dialogSpinner : Spinner
+          - lblNoTasks : TextView
+          - listTasks : RecyclerView
+          - tasks : List<TaskViewStateItem>
+          + onCreate()
+          + onCreateOptionsMenu()
+          + onDeleteTask()
+          + onOptionsItemSelected()
+          - getAddTaskDialog()
+          - onPositiveButtonClick()
+          - populateDialogSpinner()
+          - showAddTaskDialog()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.MainViewModel {
+          ~ TAG : String
+          - allTasksMutableLiveData : MutableLiveData<List<TaskViewStateItem>>
+          - sortMethodMutableLiveData : MutableLiveData<SortMethod>
+          - tasksToDisplayMediatorLD : MediatorLiveData<List<TaskViewStateItem>>
+          + MainViewModel()
+          + deleteTask()
+          + getAllProjects()
+          + getAllTasks()
+          + getSortMethodMutableLiveData()
+          + getTasksToDisplayMediatorLD()
+          + insertTask()
+          + updateSortMethod()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      enum SortMethod {
+        ALPHABETICAL
+        ALPHABETICAL_INVERTED
+        NONE
+        OLD_FIRST
+        RECENT_FIRST
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.TaskViewStateItem {
+          - colorIcon : int
+          - creationTimestamp : long
+          - nameTask : String
+          - projectName : String
+          - taskId : long
+          + TaskViewStateItem()
+          + getColorIcon()
+          + getCreationTimestamp()
+          + getNameTask()
+          + getProjectName()
+          + getTaskId()
+          + toString()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskAZComparator {
+          + compare()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskOldComparator {
+          + compare()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskRecentComparator {
+          + compare()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.TaskViewStateItem.TaskZAComparator {
+          + compare()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.TasksAdapter {
+          - tasks : List<TaskViewStateItem>
+          + getItemCount()
+          + onBindViewHolder()
+          + onCreateViewHolder()
+          ~ TasksAdapter()
+          ~ updateTasks()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      interface com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener {
+          {abstract} + onDeleteTask()
+      }
+    }
+  }
+  
+
+  namespace com.cleanup.todoc {
+    namespace ui {
+      class com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder {
+          - imgDelete : AppCompatImageView
+          - imgProject : AppCompatImageView
+          - lblProjectName : TextView
+          - lblTaskName : TextView
+          ~ TaskViewHolder()
+          ~ bind()
+      }
+    }
+  }
+  
+
+  com.cleanup.todoc.ui.MainActivity .up.|> com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener
+  com.cleanup.todoc.ui.MainActivity -up-|> androidx.appcompat.app.AppCompatActivity
+  com.cleanup.todoc.ui.MainActivity o-- com.cleanup.todoc.ui.TasksAdapter : adapter
+  com.cleanup.todoc.ui.MainActivity o-- com.cleanup.todoc.ui.MainViewModel : vm
+  com.cleanup.todoc.ui.MainViewModel -up-|> androidx.lifecycle.ViewModel
+  com.cleanup.todoc.ui.MainViewModel o-- com.cleanup.todoc.repository.Repository : repository
+  com.cleanup.todoc.ui.MainViewModel +-down- com.cleanup.todoc.ui.MainViewModel.SortMethod
+  com.cleanup.todoc.ui.TaskViewStateItem +-down- com.cleanup.todoc.ui.TaskViewStateItem.TaskAZComparator
+  com.cleanup.todoc.ui.TaskViewStateItem +-down- com.cleanup.todoc.ui.TaskViewStateItem.TaskOldComparator
+  com.cleanup.todoc.ui.TaskViewStateItem +-down- com.cleanup.todoc.ui.TaskViewStateItem.TaskRecentComparator
+  com.cleanup.todoc.ui.TaskViewStateItem +-down- com.cleanup.todoc.ui.TaskViewStateItem.TaskZAComparator
+  com.cleanup.todoc.ui.TaskViewStateItem.TaskAZComparator .up.|> java.util.Comparator
+  com.cleanup.todoc.ui.TaskViewStateItem.TaskOldComparator .up.|> java.util.Comparator
+  com.cleanup.todoc.ui.TaskViewStateItem.TaskRecentComparator .up.|> java.util.Comparator
+  com.cleanup.todoc.ui.TaskViewStateItem.TaskZAComparator .up.|> java.util.Comparator
+  com.cleanup.todoc.ui.TasksAdapter -up-|> androidx.recyclerview.widget.RecyclerView.Adapter
+  com.cleanup.todoc.ui.TasksAdapter o-- com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener : deleteTaskListener
+  com.cleanup.todoc.ui.TasksAdapter +-down- com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener
+  com.cleanup.todoc.ui.TasksAdapter +-down- com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder
+  com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder -up-|> androidx.recyclerview.widget.RecyclerView.ViewHolder
+  com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder o-- com.cleanup.todoc.ui.TasksAdapter.DeleteTaskListener : deleteTaskListener
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

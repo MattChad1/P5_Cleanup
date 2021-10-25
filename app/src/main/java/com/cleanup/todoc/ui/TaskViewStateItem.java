@@ -3,6 +3,7 @@ package com.cleanup.todoc.ui;
 import androidx.annotation.NonNull;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 public class TaskViewStateItem {
 
@@ -46,7 +47,7 @@ public class TaskViewStateItem {
     public static class TaskAZComparator implements Comparator<TaskViewStateItem> {
         @Override
         public int compare(TaskViewStateItem left, TaskViewStateItem right) {
-            return left.getNameTask().compareTo(right.getNameTask());
+            return left.getNameTask().toLowerCase(Locale.ROOT).compareTo(right.getNameTask().toLowerCase(Locale.ROOT));
         }
     }
 
@@ -56,7 +57,7 @@ public class TaskViewStateItem {
     public static class TaskZAComparator implements Comparator<TaskViewStateItem> {
         @Override
         public int compare(TaskViewStateItem left, TaskViewStateItem right) {
-            return right.getNameTask().compareTo(left.getNameTask());
+            return right.getNameTask().toLowerCase(Locale.ROOT).compareTo(left.getNameTask().toLowerCase(Locale.ROOT));
         }
     }
 
