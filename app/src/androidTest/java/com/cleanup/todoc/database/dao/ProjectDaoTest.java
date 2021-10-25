@@ -38,7 +38,7 @@ public class ProjectDaoTest {
     }
 
     @After
-    public void closeDb() throws Exception {
+    public void closeDb() {
         db.close();
     }
 
@@ -59,13 +59,5 @@ public class ProjectDaoTest {
 
         List<Project> projetsInserted = LiveDataTestUtils.getOrAwaitValue(projectDao.getAllProjects());
         assertEquals(3, projetsInserted.size());
-    }
-
-    @Test
-    public void deleteProject() throws InterruptedException {
-        long idInsert = projectDao.insertProject(testProject1);
-        projectDao.deleteProject(idInsert);
-        List<Project> projects = LiveDataTestUtils.getOrAwaitValue(projectDao.getAllProjects());
-        assertEquals(0, projects.size());
     }
 }

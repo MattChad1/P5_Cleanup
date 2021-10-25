@@ -5,10 +5,9 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import androidx.room.Update;
 
-import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.model.ProjectWithTasks;
+import com.cleanup.todoc.model.Task;
 
 import java.util.List;
 

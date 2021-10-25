@@ -219,8 +219,8 @@ class com.cleanup.todoc.ui.TaskViewStateItem {
      com.cleanup.todoc.ui.TasksAdapter o-- com.cleanup.todoc.ui.TasksAdapter.TaskViewHolder
       com.cleanup.todoc.ui.MainActivity o-- com.cleanup.todoc.ui.TasksAdapter : adapter
       com.cleanup.todoc.ui.MainActivity -- com.cleanup.todoc.ui.MainViewModel
-      com.cleanup.todoc.ui.MainViewModel -right-> com.cleanup.todoc.ui.MainViewModel.SortMethod
-      com.cleanup.todoc.ui.MainViewModel -right-> com.cleanup.todoc.repository.Repository : repository
+      com.cleanup.todoc.ui.MainViewModel -right- com.cleanup.todoc.ui.MainViewModel.SortMethod
+      com.cleanup.todoc.ui.MainViewModel -right- com.cleanup.todoc.repository.Repository : repository
        com.cleanup.todoc.ui.MainViewModel o-- com.cleanup.todoc.ui.TaskViewStateItem : génère >
        com.cleanup.todoc.ui.TaskViewStateItem -- com.cleanup.todoc.ui.MainActivity : datas >
       com.cleanup.todoc.ui.TaskViewStateItem *-- com.cleanup.todoc.ui.TaskViewStateItem.TaskAZComparator

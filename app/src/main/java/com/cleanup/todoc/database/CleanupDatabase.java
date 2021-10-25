@@ -35,8 +35,7 @@ public abstract class CleanupDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (CleanupDatabase.class) {
                 if (INSTANCE == null) {
-                    if (BuildConfig.DEBUG) INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
-                    else INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").build();
+                    INSTANCE = Room.databaseBuilder(context, CleanupDatabase.class, "MyDatabase.db").addCallback(roomCallBack).build();
                 }
             }
         }
@@ -54,9 +53,12 @@ public abstract class CleanupDatabase extends RoomDatabase {
                 projectDao.insertProject(new Project(0, "Projet Tartampion", 0xFFEADAD1));
                 projectDao.insertProject(new Project(0, "Projet Lucidia", 0xFFB4CDBA));
                 projectDao.insertProject(new Project(0, "Projet Circus", 0xFFA3CED2));
-                taskDao.insertTask(new Task(0, 1, "Task 1 - Tartampion"));
-                taskDao.insertTask(new Task(0, 1, "Task 2 - Tartampion"));
-                taskDao.insertTask(new Task(0, 2, "Task 1 - Lucidia"));
+
+                if (BuildConfig.DEBUG) {
+                    taskDao.insertTask(new Task(0, 1, "Task 1 - Tartampion"));
+                    taskDao.insertTask(new Task(0, 1, "Task 2 - Tartampion"));
+                    taskDao.insertTask(new Task(0, 2, "Task 1 - Lucidia"));
+                }
             });
         }
     };

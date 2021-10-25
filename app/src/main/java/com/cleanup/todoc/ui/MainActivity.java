@@ -37,26 +37,32 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
 
-    private String TAG = "Log MainActivity";
+    private final String TAG = "Log MainActivity";
 
     private MainViewModel vm;
 
-    private List<Project> allProjects = new ArrayList();
 
-    @NonNull
-    private List<TaskViewStateItem> tasks = new ArrayList<>();
+    private final List<Project> allProjects = new ArrayList<>();
+
+    private final List<TaskViewStateItem> tasks = new ArrayList<>();
 
     private TasksAdapter adapter;
 
-    /** Dialog to create a new task */
+    /**
+     * Dialog to create a new task
+     */
     @Nullable
     public AlertDialog dialog = null;
 
-    /** EditText that allows user to set the name of a task */
+    /**
+     * EditText that allows user to set the name of a task
+     */
     @Nullable
     private EditText dialogEditText = null;
 
-    /** Spinner that allows the user to associate a project to a task */
+    /**
+     * Spinner that allows the user to associate a project to a task
+     */
     @Nullable
     private Spinner dialogSpinner = null;
 
@@ -65,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     @NonNull
     private RecyclerView listTasks;
 
-    /** The TextView displaying the empty state */
+    /**
+     * The TextView displaying the empty state
+     */
     // Suppress warning is safe because variable is initialized in onCreate
     @SuppressWarnings("NullableProblems")
     @NonNull
@@ -92,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             if (tasks.size() == 0) {
                 lblNoTasks.setVisibility(View.VISIBLE);
                 listTasks.setVisibility(View.GONE);
-            } else {
+            }
+            else {
                 lblNoTasks.setVisibility(View.GONE);
                 listTasks.setVisibility(View.VISIBLE);
             }
@@ -114,11 +123,14 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         if (id == R.id.filter_alphabetical) {
             vm.updateSortMethod(MainViewModel.SortMethod.ALPHABETICAL);
-        } else if (id == R.id.filter_alphabetical_inverted) {
+        }
+        else if (id == R.id.filter_alphabetical_inverted) {
             vm.updateSortMethod(MainViewModel.SortMethod.ALPHABETICAL_INVERTED);
-        } else if (id == R.id.filter_oldest_first) {
+        }
+        else if (id == R.id.filter_oldest_first) {
             vm.updateSortMethod(MainViewModel.SortMethod.OLD_FIRST);
-        } else if (id == R.id.filter_recent_first) {
+        }
+        else if (id == R.id.filter_recent_first) {
             vm.updateSortMethod(MainViewModel.SortMethod.RECENT_FIRST);
         }
         return true;
@@ -147,11 +159,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             // If both project and name of the task have been set
             else {
 
-                Task task = new Task(
-                        0,
-                        projectSelected.getId(),
-                        taskName
-                );
+                Task task = new Task(0, projectSelected.getId(), taskName);
 
                 vm.insertTask(task);
                 dialogInterface.dismiss();
@@ -174,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         dialogSpinner = dialog.findViewById(R.id.project_spinner);
         populateDialogSpinner();
     }
-
 
     /**
      * Returns the dialog allowing the user to create a new task.
@@ -207,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * Sets the data of the Spinner with projects to associate to a new task
      */
     private void populateDialogSpinner() {
-        final ArrayAdapter<Project> adapter2 = new ArrayAdapter<Project>(this, android.R.layout.simple_spinner_item, allProjects);
+        final ArrayAdapter<Project> adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, allProjects);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         vm.getAllProjects().observe(this, projects -> {
             allProjects.clear();
@@ -219,8 +226,4 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             dialogSpinner.setAdapter(adapter2);
         }
     }
-
-
-
-
 }

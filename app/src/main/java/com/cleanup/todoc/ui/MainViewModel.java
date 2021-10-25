@@ -29,31 +29,31 @@ public class MainViewModel extends ViewModel {
     private final MediatorLiveData<List<TaskViewStateItem>> tasksToDisplayMediatorLD = new MediatorLiveData<>();
     private final MutableLiveData<SortMethod> sortMethodMutableLiveData = new MutableLiveData<>();
 
-    public MainViewModel (@NonNull Repository repository) {
+    public MainViewModel(@NonNull Repository repository) {
         this.repository = repository;
         Log.i(TAG, "MainViewModel: ");
 
         tasksToDisplayMediatorLD.addSource(getAllTasks(), tasksToDisplayMediatorLD::setValue);
         tasksToDisplayMediatorLD.addSource(getSortMethodMutableLiveData(), sortMethod -> {
             List<TaskViewStateItem> taskViewStateItems = allTasksMutableLiveData.getValue();
-            if (taskViewStateItems!=null) {
-            switch (sortMethod) {
-                case ALPHABETICAL:
-                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskAZComparator());
-                    break;
-                case ALPHABETICAL_INVERTED:
-                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskZAComparator());
-                    break;
-                case RECENT_FIRST:
-                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskRecentComparator());
-                    break;
-                case OLD_FIRST:
-                    Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskOldComparator());
-                    break;
+            if (taskViewStateItems != null) {
+                switch (sortMethod) {
+                    case ALPHABETICAL:
+                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskAZComparator());
+                        break;
+                    case ALPHABETICAL_INVERTED:
+                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskZAComparator());
+                        break;
+                    case RECENT_FIRST:
+                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskRecentComparator());
+                        break;
+                    case OLD_FIRST:
+                        Collections.sort(taskViewStateItems, new TaskViewStateItem.TaskOldComparator());
+                        break;
+                }
+                tasksToDisplayMediatorLD.setValue(taskViewStateItems);
             }
-            tasksToDisplayMediatorLD.setValue(taskViewStateItems);
-        }
-    });
+        });
     }
 
     public LiveData<List<TaskViewStateItem>> getAllTasks() {
@@ -63,7 +63,8 @@ public class MainViewModel extends ViewModel {
                 for (ProjectWithTasks pwt : allProjectsWithTasks) {
                     if (pwt.tasks != null) {
                         for (Task t : pwt.tasks) {
-                            liststateitems.add(new TaskViewStateItem(t.getIdTask(), t.getNameTask(), pwt.project.getName(), pwt.project.getColor(), t.getCreationTimestamp()));
+                            liststateitems.add(new TaskViewStateItem(t.getIdTask(), t.getNameTask(), pwt.project.getName(), pwt.project.getColor(),
+                                    t.getCreationTimestamp()));
                         }
                     }
                 }
@@ -74,7 +75,9 @@ public class MainViewModel extends ViewModel {
     }
 
     public void insertTask(Task task) { repository.insertTask(task); }
+
     public void deleteTask(long taskId) { repository.deleteTask(taskId); }
+
     public LiveData<List<Project>> getAllProjects() {
         return repository.getAllProjects();
     }
@@ -91,11 +94,6 @@ public class MainViewModel extends ViewModel {
      * List of all possible sort methods for task
      */
     public enum SortMethod {
-        ALPHABETICAL,
-        ALPHABETICAL_INVERTED,
-        RECENT_FIRST,
-        OLD_FIRST,
-        NONE
+        ALPHABETICAL, ALPHABETICAL_INVERTED, RECENT_FIRST, OLD_FIRST, NONE
     }
-
 }

@@ -58,11 +58,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         return tasks.size();
     }
 
-
     public interface DeleteTaskListener {
         void onDeleteTask(long taskId);
     }
-
 
     class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -71,13 +69,15 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
         private final TextView lblProjectName;
         private final AppCompatImageView imgDelete;
 
-        /** The listener for when a task needs to be deleted */
+        /**
+         * The listener for when a task needs to be deleted
+         */
         private final DeleteTaskListener deleteTaskListener;
 
         /**
          * Instantiates a new TaskViewHolder.
          *
-         * @param itemView the view of the task item
+         * @param itemView           the view of the task item
          * @param deleteTaskListener the listener for when a task needs to be deleted to set
          */
         TaskViewHolder(@NonNull View itemView, @NonNull DeleteTaskListener deleteTaskListener) {
@@ -90,13 +90,14 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             imgDelete = itemView.findViewById(R.id.img_delete);
 
             imgDelete.setOnClickListener(v -> {
-                final  Object tag = v.getTag();
+                final Object tag = v.getTag();
                 TaskViewHolder.this.deleteTaskListener.onDeleteTask((long) tag);
             });
         }
 
         /**
          * Binds a taskViewStateItem to the item view.
+         *
          * @param taskViewStateItem the task to bind in the item view
          */
         void bind(TaskViewStateItem taskViewStateItem) {

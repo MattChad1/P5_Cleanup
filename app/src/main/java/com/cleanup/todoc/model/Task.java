@@ -15,9 +15,6 @@ public class Task {
     // clé commune
     private long projectId;
 
-    // Suppress warning because setName is called in constructor
-    @SuppressWarnings("NullableProblems")
-    @NonNull
     private String nameTask;
 
     public long creationTimestamp;
@@ -28,6 +25,7 @@ public class Task {
         this.setNameTask(nameTask);
         this.setCreationTimestamp();
     }
+
     @Ignore
     public Task(long idTask, long projectId, @NonNull String nameTask, long creationTimestamp) {
         this.setIdTask(idTask);
@@ -68,6 +66,7 @@ public class Task {
     private void setCreationTimestamp() {
         this.creationTimestamp = System.currentTimeMillis() / 1000;
     }
+
     private void setCreationTimestamp(long timestamp) {
         this.creationTimestamp = timestamp;
     }

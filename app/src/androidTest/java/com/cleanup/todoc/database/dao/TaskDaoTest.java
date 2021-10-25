@@ -47,14 +47,12 @@ public class TaskDaoTest {
         projectDao.insertProject(testProject1);
         projectDao.insertProject(testProject2);
         projectDao.insertProject(testProject3);
-
     }
 
     @After
     public void closeDb() throws Exception {
         db.close();
     }
-
 
     @Test
     public void insertTask() throws InterruptedException {
@@ -63,7 +61,6 @@ public class TaskDaoTest {
 
         assertEquals(tasksInserted.get(0).getNameTask(), task1.getNameTask());
         assertEquals(tasksInserted.get(0).getProjectId(), task1.getProjectId());
-
     }
 
     @Test
@@ -94,8 +91,5 @@ public class TaskDaoTest {
         assertEquals(3, projectWithTasks.size()); // Total projects
         assertEquals(2, projectWithTasks.get(0).tasks.size()); // Total tasks in project 1 (id = 1)
         assertEquals(1, projectWithTasks.get(1).tasks.size()); // Total tasks in project 2 (id = 2)
-
-
     }
-
 }

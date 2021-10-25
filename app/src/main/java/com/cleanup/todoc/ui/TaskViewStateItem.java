@@ -7,11 +7,11 @@ import java.util.Locale;
 
 public class TaskViewStateItem {
 
-    private long taskId;
-    private String nameTask;
-    private String projectName;
-    private int colorIcon;
-    private long creationTimestamp;
+    private final long taskId;
+    private final String nameTask;
+    private final String projectName;
+    private final int colorIcon;
+    private final long creationTimestamp;
 
     public TaskViewStateItem(long taskId, String nameTask, String projectName, int colorIcon, long creationTimestamp) {
         this.taskId = taskId;
